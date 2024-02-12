@@ -1,0 +1,29 @@
+.Rproj.user
+.Rhistory
+*.RData
+*.Rda
+.Rproj
+*.pper
+
+# Ignore everything in the "Data" folder (personal data) except for the example folder "Your_Name_Here"
+Data/*
+!Data/Your_Name_Here/
+
+# Examples and testing
+Analysis-Markdown.html
+Backup
+Bugs
+Archive
+R Scripts/Read data for testing.r
+R Scripts/Archive
+R Scripts/Idea*
+Development
+
+# Hide other stuff not needed
+Spotify Streaming Analysis R.Rproj
+Wrapper Script.r
+Output
+
+
+
+

@@ -1,0 +1,250 @@
+---
+title: "Spotify Extended Streaming Analysis: `r params$strName`"
+author: "Produced by Tom Hook (GitHub: <a href='https://github.com/tomhook2'>tomhook2</a>)"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+params:
+  strName: Your_Name_Here
+output: 
+  html_document:
+    css: styles.css
+    toc: true
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Setup.r")
+```
+
+This document will provide stats and info on personal Spotify extended streaming data which can be downloaded from your [Spotify privacy settings](https://www.spotify.com/uk/account/privacy/){target="_blank"} by selecting the "Extended streaming history" box and clicking "Request Data".\
+Data recorded includes offline data as data is stored in app and uploaded once the device is connected to the internet.\
+
+
+# Summary Stats
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Summary Stats.r")
+```
+
+- Data in this report is up to `r dateLatest`.
+- Listening history on your account dates back to `r dateFirstListen` with the first song played at `r timeFirstListen` that day.
+- Over the history of the account: 
+  - You've spent `r numListenTimeMinutes` minutes (`r numListenTimeHours` hours) playing music. That equates to `r numListenPerDayMinutes` minutes per day, or `r pctListenPercent` of the time your account has been active!
+  - Your most played song is [`r strMaxSongName`](`r strMaxSongLink`){target="_blank"} by `r strMaxSongArtist`, which has been played `r cntMaxSongCount` times in `r timeDifferenceYears` years, or once every `r numAverageDaysBetweenMaxSong` days.
+  - You've played songs from `r cntDistinctArtists` distinct artists.
+  - Your favourite artist is `r strMaxArtist`, which you've spent `r numMaxArtistTimeMinutes` minutes (`r numMaxArtistTimeHours` hours) listening to, across `r cntMaxArtistSongs` different songs.
+  - You've played `r cntPodcastEpisodeCount` podcast episodes, from `r cntPodcastShowCount` different shows. Your most listened to show is `r strPodcastShowMax`, with `r numPodcastShowTimeMax` hours listened.
+
+
+# Summary Stats by Year {.tabset}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Summary Stats by Year.r")
+```
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+for (i in seq_along(vecYears)) {
+  
+  cat("## ", tblDataByYear$Year[i], "\n\n")
+  
+  cat("- In", tblDataByYear$Year[i], "you listened to", tblDataByYear$SongMinutesPlayed[i], "minutes of music.\n\n")
+  
+  cat("- You used Spotify on", tblDataByYear$DistinctDays[i], "days of the year.\n\n")
+  
+  cat("- Your favourite song in", tblDataByYear$Year[i], "was [", tblDataByYear$SongMostPlayed[i], "](", tblDataByYear$SongMostPlayedURI[i],") by", tblDataByYear$SongMostPlayedArtist[i], "which you played", tblDataByYear$SongMostPlayedCount[i],"times.\n\n")
+  
+  cat("- Your favourite artist of the year was", tblDataByYear$ArtistMostPlayed[i], "as you listened to",  tblDataByYear$ArtistMostPlayedTime[i], "minutes of them, including", tblDataByYear$ArtistMostPlayedSongCount[i] ,"distinct songs.\n\n")
+  
+  if (tblDataByYear$PodcastPlayed[i]) {
+    cat("- Your favourite podcast show of the year was",  tblDataByYear$PodcastMostPlayed[i], "which you spent", tblDataByYear$PodcastMostPlayedTime[i], "minutes listening to across", tblDataByYear$PodcastMostPlayedCount[i], "different episodes.\n\n")
+  } else {
+    cat("- You did not listen to any podcasts this year.\n\n")
+  }
+  
+}
+```
+
+# Listening Time Over the Years {.tabset}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Listening Time Over the Years.r")
+```
+
+With a combined total of `r numMaxPlayTime` minutes, `r mnthMaxPlayTime` was the month in which you spent the most time listening to songs and podcasts combined on Spotify. Let's see how this has changed over time.
+
+## Music and Podcasts Combined
+
+```{r, echo = FALSE, fig.align='center'}
+chrtRollingListeningTime
+```
+
+## Music Only
+
+```{r, echo = FALSE, fig.align='center'}
+chrtRollingListeningTimeMusic
+```
+
+## Podcasts Only
+
+```{r, echo = FALSE, fig.align='center'}
+chrtRollingListeningTimePodcast
+```
+
+# Top 10 Artists, Albums, Songs, and Podcasts Each Year {.tabset .tabset-dropdown}
+
+We've seen some all time favourites, but what about some top 10s for artists, albums, songs, and podcasts for both all time and each year.
+
+## Artists {.tabset}
+
+### All Time
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+
+source("R Scripts/Top 10s by Year/Artist.r")
+
+gtFavArtistAllTime
+cat("\n\n")
+
+for (i in seq_along(vecYears)) {
+  cat("### ", vecYears[i], "\n\n")
+  print(htmltools::tagList(lstFavArtist[[i]]))
+}
+
+```
+
+## Albums {.tabset}
+
+### All Time
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+
+source("R Scripts/Top 10s by Year/Album.r")
+
+gtFavAlbumAllTime
+cat("\n\n")
+
+for (i in seq_along(vecYears)) {
+  cat("### ", vecYears[i], "\n\n")
+  print(htmltools::tagList(lstFavAlbum[[i]]))
+}
+
+```
+
+## Songs {.tabset}
+
+### All Time
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+
+source("R Scripts/Top 10s by Year/Song.r")
+
+gtFavSongAllTime
+cat("\n\n")
+
+for (i in seq_along(vecYears)) {
+  cat("### ", vecYears[i], "\n\n")
+  print(htmltools::tagList(lstFavSong[[i]]))
+}
+
+```
+
+## Podcasts {.tabset}
+
+### All Time
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+
+source("R Scripts/Top 10s by Year/Podcast.r")
+
+gtFavPodcastAllTime
+cat("\n\n")
+
+for (i in seq_along(vecYears)) {
+  cat("### ", vecYears[i], "\n\n")
+  print(htmltools::tagList(lstFavPodcast[[i]]))
+}
+
+```
+
+# Favourite Artists over Time {.tabset}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Favourite Artists Over Time.r")
+```
+
+Taking a look at your top artists of all time, let's see when they may've come in and out of favour.
+
+## Total
+
+```{r, echo = FALSE, fig.align='center'}
+chrtArtistRollingAvg
+```
+
+## Percent
+
+```{r, echo = FALSE, fig.align='center'}
+chrtArtistRollingAvgPct
+```
+
+## Heatmap
+
+There's only so many artists you can fit on a chart... Here's your top `r numArtistsTable` artists, showing the percentage of playtime each artist took up for each year.
+
+```{r, echo = FALSE, fig.align='center', fig.width = numWidthHeatmap, fig.height=7}
+#gtArtistPlayTimeTable
+heatArtistPlayTime
+```
+
+
+# Listening Time by Day of the Week {.tabset}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Listening Time by Day of the Week.r") 
+```
+
+Have you ever wondered whether you tend to listen to more music or podcasts on weekends or weekdays? Perhaps you listen to more in your leisure time, or maybe you prefer to get grooving whilst working...\ \ 
+
+Here's your listening time split by day of the week.
+
+
+## Overall
+
+```{r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+cat(textDayOfWeekSummary)
+```
+
+```{r, echo = FALSE, fig.align='center'}
+gtDayOfWeekSummary
+```
+
+## Heatmap
+
+```{r, echo = FALSE, fig.align='center'}
+heatDayOfWeekByYear
+```
+
+# Listening Time vs Distinct Song Count {.tabset}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R Scripts/Listening Time vs Distinct Song Count.r") 
+```
+
+```{r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
+cat(textMaxArtist)
+```
+
+Use the tabs to see where your favourite artists are placed in terms of distinct songs played, and time spent listening in each year.
+
+## All Time
+
+``` {r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE, fig.align='center'}
+
+chrtTimeVsCount
+cat("\n\n")
+
+for (i in seq_along(lstTimeVsCountCharts)) {
+  cat("##", vecYears[i], "\n\n")
+  print(lstTimeVsCountCharts[[i]])
+  cat("\n\n")
+}
+```
+
+
