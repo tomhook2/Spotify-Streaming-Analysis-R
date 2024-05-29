@@ -35,6 +35,13 @@
 - Click "Knit" and wait for it to run. 
 - Find the "Analysis-Markdown.html" file in Spotify-Streaming-Analysis-R-main to view your report.
 
+## Output Example
+You can see summary stats for the entire length of the account:
+![image](https://github.com/tomhook2/Spotify-Streaming-Analysis-R/assets/119594235/d92bab0f-222f-4068-b6f3-a6cdebf52470)
 
+And the listening per day over time
+![image](https://github.com/tomhook2/Spotify-Streaming-Analysis-R/assets/119594235/6850c5e9-ccfa-411e-8030-8f27a90893dd)
+
+And more, with a full example output available in [Example Output.html](https://github.com/tomhook2/Spotify-Streaming-Analysis-R/blob/main/Example%20Output.html).
 
  
